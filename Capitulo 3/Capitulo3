@@ -198,8 +198,7 @@ iex> strength_value
 iex> strength_value = 16
 iex> %{strength: ˆstrength_value} = abilities
 
-
-################## Matching vs Keyword List ##############################
+################## Maps vs Keyword List ##############################
 iex> [b, c] = [a: 1, a: 12]
 iex> b
 {:a, 1}
@@ -207,3 +206,95 @@ iex> c
 {:a, 12}
 # una keyword es una lista de tupla de dos elementos. 
 # que permite duplicado de key pero deben ser atoms.
+# Keywords are useful for function options; for example, the import
+#directive takes a keyword list because named functions in Elixir can have
+#identical names but with different arity. For example,
+
+iex> import String, only: [pad_leading: 2, pad_leading: 3]
+String
+iex> pad_leading("def", 6)
+" def"
+iex> pad_leading("def", 6, "-")
+"---def"
+---
+
+x = %{a: 1, a: 12} # result in {a: 12}
+x = [a: 1, a: 12] # OK
+x = [{:a, 1}, {:a, 12}] # it's the same above
+x = %{1 => :a, 2 => :b } # OK
+x = [1 => :a, 2 => :b] # syntax error
+################## Matching Structs ##############################
+# Structs son exten de mapping structures.
+# usemos el pattern matching para extraer el valor de un struct isando %{} que usamos en maps
+
+iex> date = ~D[2018-01-01]
+iex> %{year: year} = date
+iex> year
+2018
+---
+
+iex> ~w(chocolate jelly mint)
+["chocolate", "jelly", "mint"]
+
+----
+# diferencia fundamental entre structs y maps. el nombre de la estructura
+# sirve para indicar que tipo de estructura esperamos
+ 
+iex> date = ~D[2018-01-01]
+iex> %Date{day: day} = date # en day(der) guardo el valor de 'day'(izq) de date
+iex> day
+1
+iex> %Date{day: day} = %{day: 1}
+** (MatchError) no match of right hand side value: %{day: 1}
+
+################## Control Flow with Functions ##############################
+ver number_compare.ex
+
+################## Applying Default Values for Function ##############################
+ # podemos usar // cuando queremos poner un valor por default
+ 
+defmodule Checkout do
+def total_cost(price, quantity \\ 10), do: price * quantity
+end
+
+# si no pasamos el segundo argumento elixir usa por default el valor 
+
+iex> c("checkout.ex")
+iex> Checkout.total_cost(12)
+120
+iex> Checkout.total_cost(12, 5)
+60
+
+----
+
+iex> using_default = &Checkout.total_cost/1
+iex> not_using_default = &Checkout.total_cost/2
+iex> using_default.(12)
+120
+iex> using_default.(12, 4)
+** (BadArityError)
+iex> not_using_default.(12)
+** (BadArityError)
+iex> not_using_default.(12, 5)
+60
+
+----
+
+defmodule Checkout do
+def total_cost(price), do: total_cost(price, 10)
+def total_cost(price, quantity), do: price * quantity
+end
+
+
+################## Expanding Control with Guard Clauses ##############################
+defmodule NumberCompare do
+def greater(number, other_number) when number >= other_number, do: number
+def greater(_, other_number), do: other_number
+end
+
+
+
+################## Elixir Control-Flow Structures ##############################
+ver material
+################## Cond: Control with Logical Expressions ##############################
+ver material

@@ -4,14 +4,14 @@ defmodule Navigator do
         go_through([expanded_dir])
     end 
 
-    defp go_through([]), do: nil
-    defp go_through([content | rest]) do    
-        print_and_navigate(content, File.dir?(content))
-        go_through(rest)
+    defp go_through([]), do: nil # condicion para detenerse
+    defp go_through([content | rest]) do   # para cada uno intentamos imprimir el path
+        print_and_navigate(content, File.dir?(content)) # y navegamos hacia sus hijos
+        go_through(rest) # y llamamos recursivamente para recorrer el directorio
     end
 
-    defp print_and_navigate(_dir, false), do: nil
-    defp print_and_navigate(dir,true) do
+    defp print_and_navigate(_dir, false), do: nil # condicion para detenerse, se detiene cuando encuentra algo que no es un directorio
+    defp print_and_navigate(dir,true) do # sino chequea todo dentro del directio con la dir
         IO.puts dir
         children_dirs = File.ls!(dir)
         go_through(expand_dirs(children_dirs, dir))

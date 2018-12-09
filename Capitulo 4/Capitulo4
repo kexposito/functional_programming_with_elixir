@@ -1,0 +1,154 @@
+#################
+# Dividing into #
+### Recursion ###
+#################
+
+
+
+###### Surrounded by Boundaries ########################
+# ver lib.ex
+
+defmodule Sum do
+    def up_to(0), do: 0
+    def up_to(n), do: n + up_to(n-1)  
+end
+
+###### Navigate Through Lists ########################
+#ver math.ex
+
+defmodule Math do
+    def sum([]), do: 0
+    def sum([head | tail]), do: head + sum(tail)
+end
+
+
+###### TransformingLists ########################
+# ver enchanter_shop.ex
+
+def test_data do
+    [
+        %{title: "Longsword", price: 50, magic: false},
+        %{title: "Healing Potion", price: 60, magic: true},
+        %{title: "Rope", price: 10, magic: false},
+        %{title: "Dragons's Spear", price: 100, magic: true},
+
+    ]
+end
+
+
+@enchanter_name "Edwing"
+
+def enchant_for_sale([]), do: []
+def enchant_for_sale([item | incoming_item]) do
+    new_item= %{
+        title: "#{@enchanter_name}'s #{item.title}",
+        price: item.price * 3,
+        magic: true
+    }
+
+    [new_item | enchant_for_sale(incoming_item)]
+end
+
+--------------
+
+# In Elixir, keywords and maps have a syntax to access values by using keys in []. If
+# the key is missing, a nil value is returned and no error is raised.
+# item = %{magic: true, price: 150, title: "Edwin's Longsword"}
+# item[:title] # returns "Edwin's Longsword"
+# item["owner"] # returns nil
+# item[:creator][:city] # returns nil
+
+# Elixir also provides key-based accessors for structs and maps to access values asso-
+# ciated with atom keys using dot notation. If the key is missing, an error is raised.
+
+# item = %{magic: true, price: 150, title: "Edwin's Longsword"}
+# item.title # returns "Edwin's Longsword"
+# item.owner # raises a KeyError
+
+###################
+#### Conquering ###
+####  Solution ####
+###################
+
+###### Decrease and Conquer ########################
+# ver factorial.ex
+
+###### Divide and Conquer ########################
+# ver sort.ex
+
+
+###### Tail.Call Optimization ########################
+# ver tr_factorial.ex
+
+###################
+###  Function   ###
+###   Without   ###
+####  Borders  ####
+###################
+# ver navigator.ex
+
+
+
+###################
+###   Adding    ###
+### Boundaries  ###
+###################
+# podemos hacer que la recursion termine en un determinado tiempo como
+# 2 minutos , como luego de tantos procesos acumulados
+# intentaremos hacer esto en el directorio navigator 
+# agregaromos una restriccion deph que diremos
+# cuantos directorios queremos que navegue \
+# por ejemplo 2 y el directorio raiz root/children/children
+
+# ver ver depth_navigator.ex
+
+
+
+###################
+###  Avoiding   ###
+#  Infinite Loops #
+###################
+# debemos evitar que se recorra infinitamente los loops como por ejemplo una
+# recursion que sea de forma circular. 
+# a -b -c -a
+#   a --> b
+#   \    /
+#      c
+
+# ver slink_skip_navigator.ex
+# https://hexdocs.pm/elixir/File.Stat.html
+
+
+###################
+# Using Recursion #
+#  with Anonymous #
+#    Functions    #
+###################
+# usando funciones anonimas no es tan simple
+
+iex> factorial = fn
+0 -> 1
+x when x > 0 -> x * factorial.(x - 1)
+end
+** (CompileError) undefined function factorial/0
+
+# no podemos hacer una llamada recursiva porque la variable aun no esta creada.
+# podemos resolver esto :
+iex> fact_gen = fn me ->
+    fn
+        0 -> 1
+        x when x > 0 -> x * me.(me).(x - 1)
+    end
+end
+iex> factorial = fact_gen.(fact_gen)
+iex> factorial.(5)
+120
+iex> factorial.(10)
+3628800
+
+# no es recomendable usar recursion con funciones anonimas
+
+iex> c("factorial.ex")
+iex> factorial = &Factorial.of/1
+iex> factorial.(5)
+120

@@ -1,0 +1,209 @@
+################
+## Making Two ##
+# Things Match #
+################
+
+iex> 1 = 1
+1
+iex> 2 = 1
+** (MatchError) no match of right hand side value: 1
+iex> 1 = 2
+** (MatchError) no match of right hand side value: 2
+
+iex> x = 1
+1
+
+iex> 1 = x
+1
+
+iex> 2 = x
+** (MatchError) no match of the right hand side value: 1
+
+iex> x = 2
+2
+----
+iex> x = 2
+2
+iex> ^x = 2
+2
+# si el valor de x es igual al del otro lado todo bien
+iex> ^x = 1
+** (MatchError) no match of right hand side value: 1
+# lo que hago con esto es ver si el valor de x es igual al otro
+
+
+#####################
+## Unpaking Values ##
+# from Various Data #
+###### Types ######## 
+#####################
+
+## Matching Parts of a String ##
+# para ver que sigue luego de un string 
+iex> "Authentication: " <> credentials = "Authentication: Basic dXNlcjpwYXNz"
+iex> credentials
+"Basic dXNlcjpwYXNz"
+
+iex> first_name <> " Doe" = "John Doe"
+** (CompileError) a binary field without size is only allowed at the end of a
+binary pattern and never allowed in binary generators
+
+## Matching Tuples ##
+# Tuplas son collecciones que estan en memoria 
+# el primer item indica correcto con un atom, el segunda es un valor
+
+{:ok, 42}
+{:error, :not_found}
+
+# podemos guardar valores de items en una tupla
+iex> {a, b, c} = {4, 5, 6}
+{4, 5, 6}
+iex> a
+4
+iex> b
+5
+iex> c
+6
+--
+iex> process_life_the_universe_and_everything = fn -> {:ok, 42} end
+iex> {:ok, answer} = process_life_the_universe_and_everything.()
+iex> IO.puts "The answer is #{answer}."
+The answer is 42.
+
+--
+
+# ver ability_modifier.exs en carpeta
+___________________________________________________________
+|user_input = IO.gets "Write your ability score:\n"
+|{ability_score,_} = Integer.parse(user_input) # usuario ingresa numero donde se guardara en ability_score
+|ability_modifier = ( ability_score - 10 ) / 2
+|IO.puts "Your ability modifier is #{ability_modifier}" 
+|
+|# para correr este compilado se usa elixir ability_modifier.exs
+|_________________________________________________________________|
+
+################## Matching List ##############################
+
+iex> [a, a, a] = [1, 1, 1]
+[1, 1, 1]
+# no hay errores
+
+iex> [a, a, a] = [1, 2, 1]
+** (MatchError) no match of right hand side value: [1, 2, 1]
+# no puedo asignarle a 'a' otro valor que no sea 1
+
+iex> [a, b, a] = [1, 2, 1]
+[1, 2, 1]
+# aca puedo porque 'b' es otro valor distinto de 'a'
+iex> [a, a, a] = ["apples", "apples", "apples"]
+["apples", "apples", "apples"]
+
+iex> [a, a, "pineapples"] = ["apples", "apples", "pineapples"]
+["apples", "apples", "pineapples"]
+
+# tambien tenemos ' _ '  cuando no queremos verificar ciertos elementos
+iex> [_, a, _] = [10, 2, 12]
+iex> a
+2
+iex> [_, a, a] = [16, 4, 4]
+iex> a
+4
+
+# tambien tenemos ' | ' cuando queremos separar un item del resto en una lista que no sabemos el taman.
+iex> [ head | tail ] = [:a, :b, :c, :d]
+iex> head
+:a
+iex> tail
+[:b, :c, :d]
+
+---
+
+iex> [ head | tail ] = [:a]
+# head tiene el valor de :a 
+# tail esta vacia
+
+-- 
+
+iex> [ head | tail ] = []
+** (MatchError) no match of right hand side value: []
+# no podemos separar elementos de una lista vacia
+
+--
+
+iex> [ a, b | rest ] = [1, 2, 3, 4]
+iex> a
+1
+iex> b
+2
+iex> rest
+[3, 4]
+
+# tambien podemos extraer mas de un elemento de la lista
+
+################## Matching Map ##############################
+# maps son estructuras de datos del tipo key/value
+
+iex> user_signup = %{email: "johndoe@mail.com", password: "12345678"}
+
+ # usamos la sintaxis ' %{} ' para crear un map
+ # email: es la key que se expande en un atom
+ # johndoe@mail.com es el valor de la key :email 
+ # tambien podemos usar =>
+
+ iex> user_signup = %{:email => "johndoe@mail.com", :password => "12345678"}
+
+ iex> sales = %{"2017/01" => 2000, "2017/02" => 2500}
+
+ # nested quedaria 
+ %{
+name: "John Doe",
+age: 20,
+programming_languages: ["Ruby", "Elixir", "JavaScript", "Java"],
+location: %{city: "São Paulo", country: "Brazil", state: "SP"}
+}
+
+
+------------
+
+iex> abilities = %{strength: 16, dexterity: 12, intelligence: 10}
+iex> %{strength: strength_value} = abilities
+iex> strength_value
+16
+# accedemos a la key ' :strength ' y haciendo ese valor en ' strength_value '
+# si el map no tiene la key que buscamos da error 
+
+iex> %{wisdom: wisdom_value} = abilities
+** (MatchError) no match of right hand side value...
+
+# si usamos un map vacio toma todos los valores del map
+iex> %{} = abilities
+%{dexterity: 12, intelligence: 10, strength: 16}
+iex> %{} = %{a: 1, b: 2}
+%{a: 1, b: 2}
+
+-----
+
+iex> %{intelligence: 10, dexterity: dexterity_value} = abilities
+iex> dexterity_value
+12
+
+-----
+
+iex> %{strength: strength_value = 16 } = abilities
+iex> strength_value
+16
+
+# o 
+
+iex> strength_value = 16
+iex> %{strength: ˆstrength_value} = abilities
+
+
+################## Matching vs Keyword List ##############################
+iex> [b, c] = [a: 1, a: 12]
+iex> b
+{:a, 1}
+iex> c
+{:a, 12}
+# una keyword es una lista de tupla de dos elementos. 
+# que permite duplicado de key pero deben ser atoms.

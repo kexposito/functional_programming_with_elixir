@@ -1,0 +1,350 @@
+####################
+### Representing ### 
+#####  Values ######
+####################
+
+iex(1)> 10
+10
+iex(2)> "Hola"
+"Hola"
+
+
+ ## Executing code and Generating a result##
+    Concatenar  Strings
+iex(4)> "hola" <> " como va"
+"hola como va"
+
+    Concatenar dos arreglos
+iex(5)> [1,2]++[4,5]
+[1, 2, 4, 5]
+
+
+####################
+##### Creating ##### 
+####  Anonymous ####
+#### Functions #####
+####################
+
+iex> hello = fn name -> "Hello, " <> name <> "!" end
+iex> hello.("Ana")
+"Hello, Ana!"
+iex> hello.("John")
+"Hello, John!"
+iex> hello.("World")
+"Hello, World!"
+ 
+
+ ## o 
+
+ iex> hello = fn name -> "Hello, #{name}!" end
+iex> hello.("Ana")
+"Hello, Ana!"
+
+## o
+
+iex> greet = fn name ->
+...> greetings = "Hello, #{name}"
+...> "#{greetings}! Enjoy your stay."
+...> end
+#Function<6.99386804/1 in :erl_eval.expr/5>
+
+## o
+
+iex> one_plus_one = fn -> 1 + 1 end
+iex> one_plus_one.()
+2
+
+## o 
+
+iex> total_price = fn price, quantity -> price * quantity end
+iex> total_price.(5, 6)
+30
+
+## o 
+
+
+####################
+### Function as #### 
+###  First-Class ###
+#### Citizens ######
+####################
+
+iex(3)> total_price= fn price, fee -> price + fee.(price) end
+#Function<12.128620087/2 in :erl_eval.expr/5>
+iex(4)> flat_fee = fn price -> 5 end
+warning: variable "price" is unused
+  iex:4
+
+#Function<6.128620087/1 in :erl_eval.expr/5>
+iex(5)> proportional_fee = fn price -> price*0.12 end
+#Function<6.128620087/1 in :erl_eval.expr/5>
+iex(6)> total_price.(1000, flat_fee)
+1005
+iex(7)> total_price.(1000, proportional_fee)
+1120.0
+
+ ## o 
+iex> total_price = fn price, fee -> price + fee.(price) end
+iex> flat_fee = fn price -> 5 end
+iex> proportional_fee = fn price -> price * 0.12 end
+iex> total_price.(1000, flat_fee)
+1005
+iex> total_price.(1000, proportional_fee)
+1120.0
+
+
+####################
+## Sharing Values ## 
+## Without using ###
+#### Arguments #####
+####################
+
+iex> message = "Hello, World!"
+iex> say_hello = fn -> Process.sleep(1000); IO.puts(message) end
+iex> spawn(say_hello)
+"Hello, World!"
+
+# producira el mensaje luego de un segundo de espera
+iex> answer = 42
+iex> make_answer = fn -> other_answer = 88 + answer end
+iex> make_answer.()
+130
+iex> other_answer
+** (CompileError) iex:4: undefined function other_answer/0
+iex> answer = 0
+iex> make_answer.()
+130
+
+# provoca error por no estar definida other_answer en el scope dodne 
+# se llama pero si esta definida dentro de la funcion 
+
+iex> product_price = 200
+iex> quantity = 2
+iex> calculate = fn quantity -> product_price * quantity end
+iex> calculate.(4)
+800
+
+# toma la variable quantity dentro de la funcion, y no la de afuera
+
+
+####################
+##### Naming  ###### 
+#### Functions #####
+####################
+####################
+
+# En elixir tenemos named_function
+
+iex> String == :"Elixir.String"
+
+String.upcase("I'm using a module. Awesome!")
+"I'M USING A MODULE. AWESOME!"
+
+# podemos omitr los parentesis para que quede mejor visualmente
+iex> IO.puts "Sometimes omitting the parentheses is better"
+
+####################
+#### Elixir's  ##### 
+###### Named #######
+#### Functions #####
+####################
+
+#String
+String.capitalize("hI Friends!"),
+String.downcase("OW")
+
+#Integer
+Integer.parse("123"), 
+Integer.to_string(-890),
+Integer.digits(890)
+
+#Float
+Float.ceil(3.7), 
+Float.floor(3.7),
+Float.round(3.7576, 2)
+
+#IO
+IO.puts("Hello, World!"), 
+IO.gets("What's yourname?"), 
+IO.inspect({:ok, 123})
+
+#Kernel
+div(1, 2), rem(1, 2), 
+is_number("Hi")
+
+
+####################
+##### Creating ##### 
+### Modules and ####
+#### Functions #####
+####################
+
+# definimos nuestro primer modulo 
+//checkout.ex 
+defmodule Checkout do 
+    def total_cost(price , tax_rate) do
+        price * (tax_rate + 1)
+    end
+end
+
+# o
+
+//lib/checkout.ex 
+defmodule Checkout do 
+    def total_cost(price , tax_rate) do: price * (tax_rate + 1)
+end
+----
+iex> c("checkout.ex")
+iex> Checkout.total_cost(100, 0.2)
+120.0
+----
+#y luego podemos acceder a ella 
+iex(1)> c("checkout.ex")
+[Checkout]
+iex(2)> Checkout.total_cost(100 , 0.2)
+120.0
+
+.
+
+# si definimos en otro directorio seria:
+//lib/ecommenrce/checkout.ex 
+__________________________________
+|defmodule Ecommerce.Checkout do 
+|    def total_cost(price , tax_rate) do
+|        price * (tax_rate + 1)
+|    end
+|end
+|___________________________________|
+# y lo llamariamos 
+
+iex> c("checkout.ex")
+iex> Ecommerce.Checkout.total_cost(100, 0.2)
+120.0
+
+####################
+#### Importing ##### 
+####   Named    ####
+#### Functions #####
+####################
+
+//lib/tas_list.ex
+_____________________________________________________
+|defmodule TaskList defmodule
+|    @file_name "task_list.md"  //atributo de modelo
+|
+|    def add( task_name ) do 
+|        task = "[ ]" <> task_name <> "\n"
+|        File.write( @file_name , task , [:append])
+|    end
+|
+|    def show_list do
+|        File.read( @file_name)
+|    end
+|end
+|________________________________________________________|
+
+# cambiando la importacion de el File.read nos queda
+
+//lib/task_lsit_with_import.ex
+________________________________________________
+|defmodule TaskListWithImport do
+|    import File, only: [write: 3, read: 1]
+|    @file_name "task_list.md"
+|
+|    def add(task_name) do
+|        task = "[ ] " <> task_name <> "\n"
+|        write(@file_name, task, [:append])
+|    end
+|
+|    def show_list do
+|        read(@file_name)
+|    end
+|end
+|_________________________________________________|
+
+####################
+#####  Using   ##### 
+####   Named    ####
+#### Functions #####
+#### As Values  ####
+####################
+
+iex> upcase = fn string -> String.upcase(string) end
+iex> upcase.("hello, world!")
+"HELLO, WORLD!"
+
+# o 
+
+iex> upcase = &String.upcase/1
+iex> upcase.("hello, world!")
+"HELLO, WORLD!"
+
+# el $ captura la referencia a la funcion String.upcase/1
+# el = es para a la variable upcase.
+# y la funcion debe respetarfunction/arity
+# tambien podemos usar el operador & para las funciones anonimas
+
+iex> total_cost = &(&1 * &2)
+iex> total_cost.(10, 2)
+20
+
+# & define el inicio de una funcion donde el cuerpo esta dentro 
+# de los parentesis (). &1 es el primer argumento y  &2 es e segundo
+
+iex> check = &(true)
+** (CompileError) tmp/src.exs:1: invalid args for &, expected an expression in
+the format of &Mod.fun/arity, &local/arity or a capture containing at least one
+argument as &1, got: true
+--
+
+iex> check = fn -> true end
+iex> check.()
+true
+
+--
+
+iex> mult_by_2 = & &1 * 2
+iex> mult_by_2.(3)
+6
+
+####################
+###  Wrapping   #### 
+####     Up     ####
+####################
+
+##### Your Turn ####
+1) 
+    Sol 1 
+iex> total= &( (&1*0.1) + (&2*2) + (&3*15))
+iex> total.(10,3,1)
+iex> 22.0
+
+    Sol 2
+iex> bread_price = 0.10
+iex> milk_price = 2
+iex> cake_price = 15
+iex> calculate = fn bread,milk,cake -> (bread_price * bread) + (milk_price * milk ) + (cake_price * cake)  end
+iex> calculate.(10,3,1)
+iex> 22.0
+
+    Sol 3(  m  )
+defmodule Ej1 do
+    def total([head | tail]) do
+        {item, quantity} = head
+        price(item) * quantity + total(tail)
+    end
+
+    def total([]), do: 0
+
+    def price(:bread), do: 10
+    def price(:milk), do: 1
+
+    def price(item) do
+       if item == :bread do
+        10
+        else
+        if 
+    end
+end
+
+Ej1.total([bread: 10, milk: 3, cake: 1])

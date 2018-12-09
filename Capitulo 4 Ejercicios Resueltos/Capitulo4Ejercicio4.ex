@@ -38,7 +38,7 @@ defmodule Capitulo4Ejercicio4 do
     def ascending(list) do
         half_size = div(Enum.count(list), 2) 
         {list_a, list_b} = Enum.split(list, half_size) 
-        merge(
+        merge( 
             ascending(list_a),
             ascending(list_b),
             []

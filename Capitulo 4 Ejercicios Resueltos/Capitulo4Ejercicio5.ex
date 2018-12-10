@@ -11,10 +11,11 @@ defmodule BreathNavigator do
         print_and_navigate(content, File.dir?(content))
         go_through(rest, current_breadth + 1)
     end
-    
+
     defp print_and_navigate(_dir, false), do: nil
     defp print_and_navigate(dir, true) do
         IO.puts dir
+        {:ok, children_dirs} = File.ls(dir) #skipping directory
         go_through(expand_dirs(children_dirs, dir), 0)
     end
 

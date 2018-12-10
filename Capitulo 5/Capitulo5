@@ -84,7 +84,7 @@ iex> MyList.map(["45.50", "32.12", "86.0"], &String.to_float/1)
 
 
 ############## Reducing Lists to One Value  ##############
-
+# ver my_list.ex
 def reduce([], acc, _function), do: acc
 def reduce([head | tail], acc, function) do
 reduce(tail, function.(head, acc), function)
@@ -97,3 +97,319 @@ iex> MyList.reduce(enchanted_items, 0, sum_price)
 340
 
 # la funcion acumula el valor de la suma de cada uno y tambien tienen los items
+
+iex> MyList.reduce([10, 5, 5, 10], 0, &+/2)
+30
+iex> MyList.reduce([5, 4, 3, 2, 1], 1, &*/2)
+120
+iex> MyList.reduce([100, 20, 400, 200], 100, &max/2)
+400
+iex> MyList.reduce([100, 20, 400, 200], 100, &min/2)
+20
+
+############## Filtering Items of a List   ##############
+# vamos a filtrar una lista por criterio
+# filtraremos todos los precuos por debajo de 70
+
+
+
+    # def filter([], _function), do: []
+    # def filter([head | tail], function) do
+    #     if function.(head) do   
+    #         [head | filter(tail, function)]
+    #     else
+    #         filter(tail, function)
+    #     end
+    # end
+
+    # FUNCION A USAR
+# iex> c("my_list.ex")
+# iex> MyList.filter(enchanted_items, fn item -> item.price < 70 end)
+# [%{price: 60, title: "Healing Potion"}, %{price: 30, title: "Edwin's Rope"}]
+
+# iex> MyList.filter(["a", "b", "c", "d"], &(&1 > "b"))
+# ["c", "d"]
+# iex> MyList.filter([100, 200, 300, 400], &(&1 < 300))
+# [100, 200]
+# iex> MyList.filter(["Alex", "Mike", "Ana"], &String.starts_with?(&1, "A"))
+# ["Alex", "Ana"]
+# iex> MyList.filter(["a@b", "t.t", "a@b.c"], &String.contains?(&1, "@"))
+# ["a@b", "a@b.c"]
+
+
+
+####################
+   Using the Enum
+      Module
+####################
+# queda claro como usar estas funciones, pero ahora
+# vamos a mostrar como las aplicamos con Enum.each 
+
+        # EJEMPLO 1 ENUM
+Enum.each(["dogs", "cats", "flowers"], &(IO.puts String.upcase(&1)))
+DOGS
+CATS
+FLOWERS
+
+        # EJEMPLO 2 ENUM
+iex> Enum.map(["dogs", "cats", "flowers"], &String.capitalize/1)
+["Dogs", "Cats", "Flowers"]
+
+        # EJEMPLO 3 ENUM
+iex> Enum.reduce([10, 5, 5, 10], 0, &+/2)
+30
+
+        # EJEMPLO 4 ENUM
+iex> Enum.filter(["a", "b", "c", "d"], &(&1 > "b"))
+["c", "d"]
+
+        # EJEMPLO 5 ENUM
+iex> Enum.count(["dogs", "cats", "flowers"])
+3
+
+        # EJEMPLO 6 ENUM
+iex>Enum.uniq(["a", "a", "b", "b", "b", "c"])
+["a", "b", "c"]
+
+        # EJEMPLO 7 ENUM
+iex>Enum.sum([10, 5, 5, 10])
+30
+
+        # EJEMPLO 8 ENUM
+Enum.sort(["c", "d", "b", "a"], &<=2)
+["a", "b", "c", "d"]
+
+        # EJEMPLO 9 ENUM
+Enum.sort(["c", "d", "b", "a"], &>=2) # entran 2
+["a", "b", "c", "d"]
+
+        # EJEMPLO 10 ENUM
+iex> Enum.member?([10, 20, 12], 10)
+true
+
+        # EJEMPLO 11 ENUM
+iex> Enum.join(["apples", "hot dogs", "flowers"], ", ")
+"apples, hot dogs, flowers"
+
+##########################################
+
+iex> upcase = fn {_key, value} -> String.upcase(value) end
+iex> Enum.map(%{name: "willy", last_name: "wonka"}, upcase)
+["WONKA", "WILLY"]
+
+# tambien podemos aplicar estos a un map
+
+
+        # EJEMPLO 12 ENUM
+group_by(enumerable, key_fun, value_fun \\ fn x -> x end)
+Splits the enumerable into groups based on key_fun
+
+iex> medals = [
+%{medal: :gold, player: "Anna"},
+%{medal: :silver, player: "Joe"},
+%{medal: :gold, player: "Zoe"},
+%{medal: :bronze, player: "Anna"},
+%{medal: :silver, player: "Anderson"},
+%{medal: :silver, player: "Peter"}
+]
+
+iex> Enum.group_by(medals, &(&1.medal), &(&1.player))
+%{bronze: ["Anna"], gold: ["Anna", "Zoe"], silver: ["Joe", "Anderson", "Peter",]}
+
+
+####################
+      Using 
+  Comprehensions
+####################
+# elixir tiene ' for ' que se asemeja al Enum, podemos iterar maps and filter de manera simple
+
+        # EJEMPLO 1 FOR
+iex> for a <- ["dogs", "cats", "flowers"], do: String.upcase(a)
+["DOGS", "CATS", "FLOWERS"]
+
+        # EJEMPLO 2 FOR
+    # asociamos  cada estudiante con cada materia 
+iex> for a <- ["Willy", "Anna"], b <- ["Math", "English"], do: {a, b}
+[{"Willy", "Math"}, {"Willy", "English"}, {"Anna", "Math"}, {"Anna", "English"}]
+
+        # EJEMPLO 3
+    # usando pattern matching
+iex> parseds = for i <- ["10", "hot dogs", "20" ], do: Integer.parse(i)
+[{10, ""}, :error, {20, ""}]
+iex> for {n, _} <- parseds, do: n
+[10, 20]
+
+
+        # EJEMPLO 4
+iex> for n <- [1, 2, 3, 4, 5, 6, 7], n > 3, do: n
+[4, 5, 6, 7]
+
+####################
+  Pipelining Your
+     Functions
+####################
+# usaremos el operador ' pipe ' que sirve para combinar funciones
+# para logar un resultado mas exitoso
+# llama a una funcion, y con el resultado dado llama a la otra funcion
+
+defmodule HigherOrderFunctions do
+    def compose(f, g) do
+        fn arg -> f.(g.(arg)) end
+    end
+end
+
+iex> c("higher_order_functions.ex")
+iex> import HighOrderFunctions
+iex> first_letter_and_upcase = compose(&String.upcase/1, &String.first/1)
+iex> first_letter_and_upcase.("works")
+"W"
+iex> first_letter_and_upcase.("combined")
+"C"
+
+
+######## lo mismo que lo anterior pero usando el ' pipe '
+
+# iex> first_letter_and_upcase = &(&1 |> String.first |> String.upcase)
+# iex> first_letter_and_upcase.("works")
+# "W"
+# iex> first_letter_and_upcase.("combined")
+# "C"
+
+# como funciona
+# iex> first_letter_and_upcase = &(&1 |> String.first |> String.upcase)
+# iex> first_letter_and_upcase.("works")
+# "W"
+# iex> first_letter_and_upcase.("combined")
+# "C"
+# iex> "works" |> String.first |> String.upcase
+# "W"
+
+
+###########
+
+defmodule MyString do
+    def capitalize_words(title) do
+        words = String.split(title) # separo cada una de las palabras
+        capitalize_words = Enum.map(words, &String.capitalize/1) # paracada una de las palabras
+        Enum.join(capitalize_words," ") # y las separo
+    end   
+end
+
+
+# iex> c("my_string.ex")
+# iex> MyString.capitalize_words("a whole new world")
+# "A Whole New World"
+
+######### usando pipe ############
+    def capitalize_words2(title) do
+        title
+        |> String.split
+        |> Enum.map(&String.capitalize/1)
+        |> Enum.join(" ")
+    end
+
+end
+
+# paso a paso 
+# iex> "a whole new world" |> String.split
+# ["a", "whole", "new", "world"]
+
+# iex> "a whole new world" |> String.split |> Enum.map(&String.capitalize/1)
+# ["A", "Whole", "New", "World"]
+
+####################
+    Be Lazy
+####################
+
+############### Delay the Function Call ################
+
+
+
+iex> c("word_builder.ex")
+iex> WordBuilder.build("world", [4, 1, 1, 2])
+"door"
+
+
+# este va a dar error ya que Start.at requiere dos parametros, la palabra y el indice 
+    # at(string, position) View Source
+    # at(t(), integer()) :: grapheme() | nil
+    def build(alphabet, position) do
+        letters = Enum.map(position, Start.at(alphabet))
+        Enum.join(letters)
+    end
+
+    # iex> c("word_builder.ex")
+    # iex> WordBuilder.build("world", [4, 1, 1, 2])
+    # ** (UndefinedFunctionError) undefined function: String.at/1
+
+    def build2(alphabet, position) do
+        partial = fn at -> String.at(alphabet,at) end
+        letters = Enum.map(position, partial) # para cada una de las posiciones, saco la letra con la funcion anterior
+        Enum.join(letters)
+    end
+
+    # iex> c("word_builder.ex")
+    # iex> WordBuilder.build("world", [4, 1, 1, 2])
+    # "door"
+
+
+    def build3(alphabet, position) do
+        letters = Enum.map(position, &(String.at(alphabet, &1))) # aplica la funcion (izq) a el conjunto de la (der)
+        Enum.join(letters)
+    end
+
+
+####################
+  Working with the
+    Infinite
+####################
+
+# podemos usar el literal ' range '
+iex> range = 1..10
+1..10
+
+iex> Enum.each(range, &IO.puts/1)
+1
+2
+# ...
+10
+:ok
+
+# ver factorial.ex
+
+ def of1(0), do: 1
+    def of1(n) when n > 0 do 
+        Stream.iterate(1, &(&1 + 1))
+            |> Enum.take(n)
+            |> Enum.reduce(&(&1* &2))
+    end 
+
+    # iex> c("factorial.ex")
+    # iex> Factorial.of1(5)
+    # 120
+    # iex> Factorial.of1(10)
+    # 3628800
+
+
+# elixir tiene otra funcion ara generar colecciones infinitas como Stream.cycle/1   # vuelve a repetir cada uno de los datos
+
+####################
+  Pipelining Data
+    Streams
+####################
+# vamos a usar pipe con os strams, para crear un pipeline
+# consuimiendo datos de un Stream
+# vamos a ver dos maneras, eager(computa todos y los manda)  y lazy(computa alguno y los manda)
+# eager va  mostrar los resutados solo luego de que los items se procesaron.
+# lazy va a mostrar luego de ya tener algunos procesados.
+
+
+    # como funciona le chunk
+    # iex> Enum.chunk([1, 2, 3, 4, 5, 6], 2)
+    # [[1, 2], [3, 4], [5, 6]]
+    
+    # como funciona el flat_map
+    # iex> Enum.flat_map([[1, 2], [3, 4], [5, 6]], &(&1))
+    # [1, 2, 3, 4, 5, 6]
+
+# ver screws_factory.ex

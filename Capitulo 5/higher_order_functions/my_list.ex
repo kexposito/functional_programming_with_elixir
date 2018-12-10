@@ -66,6 +66,38 @@ defmodule MyList do
         end
     end
 
+# iex> MyList.reduce([10, 5, 5, 10], 0, &+/2)
+# 30
+# iex> MyList.reduce([5, 4, 3, 2, 1], 1, &*/2)
+# 120
+# iex> MyList.reduce([100, 20, 400, 200], 100, &max/2)
+# 400
+# iex> MyList.reduce([100, 20, 400, 200], 100, &min/2)
+# 20
+
+    # def filter([], _function), do: []
+    # def filter([head | tail], function) do
+    #     if function.(head) do   
+    #         [head | filter(tail, function)]
+    #     else
+    #         filter(tail, function)
+    #     end
+    # end
+
+    # FUNCION A USAR
+# iex> c("my_list.ex")
+# iex> MyList.filter(enchanted_items, fn item -> item.price < 70 end)
+# [%{price: 60, title: "Healing Potion"}, %{price: 30, title: "Edwin's Rope"}]
+
+# iex> MyList.filter(["a", "b", "c", "d"], &(&1 > "b"))
+# ["c", "d"]
+# iex> MyList.filter([100, 200, 300, 400], &(&1 < 300))
+# [100, 200]
+# iex> MyList.filter(["Alex", "Mike", "Ana"], &String.starts_with?(&1, "A"))
+# ["Alex", "Ana"]
+# iex> MyList.filter(["a@b", "t.t", "a@b.c"], &String.contains?(&1, "@"))
+# ["a@b", "a@b.c"]
+
     
 end
 

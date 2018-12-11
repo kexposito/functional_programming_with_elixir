@@ -1,5 +1,6 @@
 defmodule DungeonCrawl.CLI.HeroChoice do
     alias Mix.Shell.IO, as: Shell
+    import DungeonCrawl.CLI.BaseCommands # importo los comandos para usar display_options, generate_question, parse_answer
 
     def start do
         Shell.cmd("clear") # que interactue con la terminal para limpiar la pantalla
@@ -9,32 +10,13 @@ defmodule DungeonCrawl.CLI.HeroChoice do
         find_hero_by_index= &Enum.at(heroes, &1) # https://hexdocs.pm/elixir/Enum.html#at/3
 
         heroes
-        |> Enum.map(&(&1.name)) # https://hexdocs.pm/elixir/Enum.html#map/2
-        |> display_options
-        |> generate_question
+      #  |> Enum.map(&(&1.name)) # https://hexdocs.pm/elixir/Enum.html#map/2
+        |> display_options # importado desde  BaseCommands
+        |> generate_question # importado desde  BaseCommands
         |> Shell.prompt
-        |> parse_answer
+        |> parse_answer # importado desde  BaseCommands
         |> find_hero_by_index.()
         |> confirm_hero
-    end
-    
-    def display_options(options) do
-        options
-        |> Enum.with_index(1) # genera lista de tuplas que tiene indices y los nombres de los heroes
-        |> Enum.each(fn {option, index} ->
-            Shell.info("#{index} - #{option}")
-        end)
-        options
-    end
-
-    defp generate_question(options) do
-        options = Enum.join(1..Enum.count(options), ",") # https://hexdocs.pm/elixir/Enum.html#join/2
-        "Wich one? [#{options}]\n"
-    end
-
-    defp parse_answer(answer) do
-        {option, _} = Integer.parse(answer)
-        option - 1
     end
 
     defp confirm_hero(chosen_hero) do

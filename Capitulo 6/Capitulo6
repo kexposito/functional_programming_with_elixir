@@ -1,0 +1,10 @@
+############
+ The Game
+ ###########
+ crearemos a partir de 
+ $mix new dungeon_crawl
+
+ entramos a la carpeta
+
+ y corriendo #mix test automaticamente detecta 
+ lo archivos que necesitamos para que sean compilados

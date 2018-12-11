@@ -8,3 +8,14 @@
 
  y corriendo #mix test automaticamente detecta 
  lo archivos que necesitamos para que sean compilados
+
+ iex -S mix
+ -S le digo a IEx que corra el scriot pasando ' mix '  
+ 
+ podemos crear Character usando iex
+
+iex> warrior = %DungeonCrawl.Character{name: "Warrior"}
+%DungeonCrawl.Character{attack_description: nil, damage_range: nil,
+description: nil, hit_points: 0, max_hit_points: 0, name: "Warrior"}
+iex> warrior.name
+"Warrior"

@@ -10,7 +10,7 @@ defmodule DungeonCrawl.CLI.HeroChoice do
         find_hero_by_index= &Enum.at(heroes, &1) # https://hexdocs.pm/elixir/Enum.html#at/3
 
         heroes
-      #  |> Enum.map(&(&1.name)) # https://hexdocs.pm/elixir/Enum.html#map/2
+        #|> Enum.map(&(&1.name)) # https://hexdocs.pm/elixir/Enum.html#map/2
         |> display_options # importado desde  BaseCommands
         |> generate_question # importado desde  BaseCommands
         |> Shell.prompt

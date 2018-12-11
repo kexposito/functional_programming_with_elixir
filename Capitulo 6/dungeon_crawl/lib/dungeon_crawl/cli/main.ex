@@ -4,9 +4,13 @@ defmodule DungeonCrawl.CLI.Main do
     def start_game do
         welcome_message()
         Shell.prompt("Press Enter to continue")
-        hero_choice()
         crawl(hero_choice(), DungeonCrawl.Room.all()) # random room
     end
+    defp hero_choice do
+        hero = DungeonCrawl.CLI.HeroChoice.start()
+        %{hero | name: "You"}
+    end
+
     defp crawl(%{hits_points: 0}, _) do
         Shell.prompt("")
         Shell.cmd("clear")
@@ -31,7 +35,6 @@ defmodule DungeonCrawl.CLI.Main do
         |> handle_action_result
     end
 
-    
 
     defp trigger_action({room, action}, character) do
         Shell.cmd("clear")
@@ -50,8 +53,5 @@ defmodule DungeonCrawl.CLI.Main do
         Shell.info("You need to survive and find the exit.")
     end
 
-    defp hero_choice do
-        hero = DungeonCrawl.CLI.HeroChoice.start()
-        %{hero | name: "You"}
-    end
+    
 end

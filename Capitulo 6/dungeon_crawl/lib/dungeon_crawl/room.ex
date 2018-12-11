@@ -8,7 +8,7 @@ defmodule DungeonCrawl.Room do
     def all, do: [
         %Room{
             description: "You found a quiet place. Looks safe for a little nap."
-            actions: [forward(), rest()]
+            actions: [forward(), rest()],
         },
     ]
 end

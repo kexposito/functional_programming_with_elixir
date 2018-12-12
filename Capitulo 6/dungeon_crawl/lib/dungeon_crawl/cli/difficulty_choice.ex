@@ -6,7 +6,7 @@ defmodule DungeonCrawl.CLI.DifficultyChoice do
         Shell.cmd("clear") 
         Shell.info("Choose Difficulty :")
 
-        difficult = ["Medium", "Hard"]
+        difficult = [:medium, :hard]        # no es lo mismo que  difficult = ["medium", "hard"]
         find_dif_by_index= &Enum.at(difficult, &1) 
 
         difficult

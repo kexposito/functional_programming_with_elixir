@@ -3,8 +3,9 @@ defmodule DungeonCrawl.CLI.Main do
 
     def start_game do
         welcome_message()
+        
         Shell.prompt("Press Enter to continue")
-        crawl(hero_choice(),difficulty_choice() , DungeonCrawl.Room.all()) # random room
+        crawl(hero_choice(),difficulty_choice() , DungeonCrawl.Room.all(),0) # random room
     end
     
     defp welcome_message do
@@ -23,32 +24,33 @@ defmodule DungeonCrawl.CLI.Main do
         %{chance: dif}
     end
 
-    defp crawl(%{hits_points: 0}, _, _) do
+    defp crawl(%{hits_points: 0}, _, _, score) do
         Shell.prompt("")
         Shell.cmd("clear")
         Shell.info("Unfortunately your wounds are too many to keep walking.")
         Shell.info("You fall onto the floor without strength to carry on.")
         Shell.info("Game over!")
+        File.open("Score.txt", [:write], &(IO.write(&1, points))) #cambiar por el score
         Shell.prompt("")
     end
 
     
-    defp crawl(character, dif, rooms) do
+    defp crawl(character, dif, rooms, score) do
         Shell.info("You keep moving forward to the next room.")
         Shell.prompt("Press Enter to continue")
         Shell.cmd("clear")
 
         Shell.info(DungeonCrawl.Character.current_stats(character))
+        Shell.info("Player Score\nScore: #{score}")
         mark = Enum.random(1..100)
 
-        IO.inspect(dif.chance)
+        #IO.inspect(dif.chance)
         #|> Enum.filter(fn room -> Map.get(room.chance,  dif.chance) >= mark end)  
         #|> Enum.filter(fn room -> (room.chance.dif) >= mark end)
         #|> random_by_difficulty("medium")  #   |> Enum.filter(fn %{chance: x} -> Enum.member?(mark,x)) end)
 
         rooms
         |> Enum.filter(fn room -> room.chance[dif.chance] >= mark end)
-        |> IO.inspect
         |> Enum.random()  
         |> DungeonCrawl.CLI.RoomActionsChoice.start
         |> trigger_action(character)
@@ -71,11 +73,11 @@ defmodule DungeonCrawl.CLI.Main do
         room.trigger.run(character, action)
     end
 
-    defp handle_action_result({_,:exit},_),
+    defp handle_action_result({_,:exit},_, _),
         do: Shell.info("You found the exit. You won the game. Congratulations!")
 
-    defp handle_action_result({character,_},dif),
-        do: crawl(character, dif,DungeonCrawl.Room.all())
+    defp handle_action_result({character,_},dif,score),
+        do: crawl(character, dif,DungeonCrawl.Room.all(),score)
 
 
 

@@ -31,8 +31,9 @@ defmodule DungeonCrawl.CLI.Main do
         Shell.info("Unfortunately your wounds are too many to keep walking.")
         Shell.info("You fall onto the floor without strength to carry on.")
         Shell.info("Game over!")
+        player_name = Shell.prompt("Write your name: ")
         # https://hexdocs.pm/elixir/File.html
-        File.open("Score.txt", [:write], &(IO.write(&1, character.score))) #cambiar por el score
+        File.open("Score.txt", [:append], &(IO.write(&1,"Player Name: #{player_name}Hero: #{character.name} -- Score: #{character.score} \n" ))) #cambiar por el score
         Shell.prompt("")
     end
 
@@ -45,6 +46,10 @@ defmodule DungeonCrawl.CLI.Main do
         Shell.info(DungeonCrawl.Character.current_stats(character))
         Shell.info("Player Score\nScore: #{character.score}")
         mark = Enum.random(1..100)
+
+
+        rooms = DungeonCrawl.Room.update_exit(rooms, dif);
+        IO.inspect(rooms)
 
         #IO.inspect(dif.chance)
         #|> Enum.filter(fn room -> Map.get(room.chance,  dif.chance) >= mark end)  

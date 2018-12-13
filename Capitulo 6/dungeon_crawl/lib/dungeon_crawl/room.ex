@@ -12,7 +12,6 @@ defmodule DungeonCrawl.Room do
             actions: [forward()],
             trigger: Triggers.Exit,
             chance: %{medium: 0,hard: 10}, # no es lo mismo que esto   chance: %{"medium" => 0,hard: 0}
-           
         },
         %Room{
             description: "You can see an enemy blocking your path.",
@@ -42,5 +41,16 @@ defmodule DungeonCrawl.Room do
        
         },
     ]
+    def update_exit(exit_room, dif) do  
+        exit_room
+                |> Enum.filter(fn room -> %{trigger: Triggers.Exit} end) # filtrar por comportamiento
+                |> IO.inspect
+                |> put_in(exit_room[:chance][:medium], 150) 
+            #https://hexdocs.pm/elixir/1.6.0/Behaviour.html
+            
+         #IO.inspect()
+    end
+
+
  
 end

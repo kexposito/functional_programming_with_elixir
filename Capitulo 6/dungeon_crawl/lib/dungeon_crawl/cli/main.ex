@@ -24,13 +24,15 @@ defmodule DungeonCrawl.CLI.Main do
         %{chance: dif}
     end
 
-    defp crawl(%{hit_points: 0}, _, _) do 
+    
+    defp crawl(character = %{hit_points: 0}, _, _) do # como saco el heroe de aca : %{hit_points: 0}
         Shell.prompt("")
         Shell.cmd("clear")
         Shell.info("Unfortunately your wounds are too many to keep walking.")
         Shell.info("You fall onto the floor without strength to carry on.")
         Shell.info("Game over!")
-       # File.open("Score.txt", [:write], &(IO.write(&1, points))) #cambiar por el score
+        # https://hexdocs.pm/elixir/File.html
+        File.open("Score.txt", [:write], &(IO.write(&1, character.score))) #cambiar por el score
         Shell.prompt("")
     end
 

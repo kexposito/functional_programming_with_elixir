@@ -19,8 +19,6 @@ defmodule DungeonCrawl.Room do
             actions: [forward()],
             trigger: Triggers.Enemy,
             chance: %{medium: 100, hard: 100},
-           
-
         },
         %Room{
             description: "Nothing here.",

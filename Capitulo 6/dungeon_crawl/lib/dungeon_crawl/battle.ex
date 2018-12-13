@@ -9,17 +9,25 @@ defmodule DungeonCrawl.Battle do
     ) when hit_points_a == 0 or hit_points_b == 0, do: {char_a, char_b}
 
     # pelea si el personaje sale corriendo y almenos tiene que darle un golpe
-    def fight(char_a, char_b, :no) do  
-        IO.puts("#{char_b.name} wants to hit youbefore you run!")
-        char_b_after_damage = attack(char_a, char_b)
-        {char_a, char_b}
+    # def fight(char_a, char_b, :no) do  
+    #     IO.puts("#{char_b.name} wants to hit you before you run!")
+    #     char_a_after_damage = attack(char_b, char_a)
+    #     {char_a, char_b}
+    # end
+
+    def fight(char_a, char_b, :no) do  # sino, cada uno de los personajes se ataca, usando la funcion attack
+            char_b_after_damage = attack(char_a, char_b)
+            char_a_after_damage = attack(char_b_after_damage, char_a)
+            {char_a, char_b}
     end
 
-    def fight(char_a, char_b, :yes) do  # sino, cada uno de los personajes se ataca, usando la funcion attack
+    def fight(char_a, char_b, _) do  # sino, cada uno de los personajes se ataca, usando la funcion attack
         char_b_after_damage = attack(char_a, char_b)
         char_a_after_damage = attack(char_b_after_damage, char_a)
-        fight(char_a_after_damage, char_b_after_damage, :yes)
+        fight(char_a_after_damage, char_b_after_damage, ask_hero())
     end
+
+    
 
     defp attack(%{hit_points: hit_points_a}, character_b) # si no tengo mas puntos de ataque no hago nada
         when hit_points_a == 0, do: character_b
@@ -58,5 +66,11 @@ defmodule DungeonCrawl.Battle do
     defp receive_message(character, damage) do 
         "#{character.name} receives #{damage}. " <>
         "Current HP: #{character.hit_points}."
+    end
+
+    defp ask_hero() do
+        #Shell.cmd("clear")
+        Shell.info("Sure you want to fight?, The enemy will hit you one more time if you leave")
+        if Shell.yes?("Fight?"), do: :yes, else: :no
     end
 end

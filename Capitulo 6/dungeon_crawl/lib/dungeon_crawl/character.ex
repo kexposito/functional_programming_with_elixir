@@ -40,8 +40,8 @@ defmodule DungeonCrawl.Character do
         end
 
         # def add_score(character, points) do
-        #     #  new_points = character.score + points
-        #     #  character = Map.put(character, :score, points)
+        #       new_points = character.score + points
+        #       character = Map.put(character, :score, new_points)
         # end
 
         def current_stats(character),

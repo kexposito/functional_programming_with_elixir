@@ -30,7 +30,7 @@ defmodule DungeonCrawl.CLI.Main do
         Shell.info("Unfortunately your wounds are too many to keep walking.")
         Shell.info("You fall onto the floor without strength to carry on.")
         Shell.info("Game over!")
-        File.open("Score.txt", [:write], &(IO.write(&1, points))) #cambiar por el score
+       # File.open("Score.txt", [:write], &(IO.write(&1, points))) #cambiar por el score
         Shell.prompt("")
     end
 
@@ -54,7 +54,7 @@ defmodule DungeonCrawl.CLI.Main do
         |> Enum.random()  
         |> DungeonCrawl.CLI.RoomActionsChoice.start
         |> trigger_action(character)
-        |> handle_action_result(dif)
+        |> handle_action_result(dif, score)
     end
     
     # def random_by_difficulty(rooms, dif) do

@@ -24,7 +24,7 @@ defmodule DungeonCrawl.CLI.Main do
         %{chance: dif}
     end
 
-    defp crawl(%{hits_points: 0}, _, _, score) do
+    defp crawl(%{hit_points: 0}, _, _, score) do 
         Shell.prompt("")
         Shell.cmd("clear")
         Shell.info("Unfortunately your wounds are too many to keep walking.")
@@ -39,7 +39,7 @@ defmodule DungeonCrawl.CLI.Main do
         Shell.info("You keep moving forward to the next room.")
         Shell.prompt("Press Enter to continue")
         Shell.cmd("clear")
-
+        IO.inspect(character.hit_points)
         Shell.info(DungeonCrawl.Character.current_stats(character))
         Shell.info("Player Score\nScore: #{score}")
         mark = Enum.random(1..100)

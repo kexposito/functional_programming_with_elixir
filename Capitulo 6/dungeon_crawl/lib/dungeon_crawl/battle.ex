@@ -4,22 +4,21 @@ defmodule DungeonCrawl.Battle do
     
     def fight(# chequeo si alguno de los dos tiene 0 de hit_points, y los devuelvo
         char_a = %{hit_points: hit_points_a},
-        char_b = %{hit_points: hit_points_b}
+        char_b = %{hit_points: hit_points_b},
+        _
     ) when hit_points_a == 0 or hit_points_b == 0, do: {char_a, char_b}
 
     # pelea si el personaje sale corriendo y almenos tiene que darle un golpe
     def fight(char_a, char_b, :no) do  
         IO.puts("#{char_b.name} wants to hit youbefore you run!")
         char_b_after_damage = attack(char_a, char_b)
-       # char_a_after_damage = attack(char_b_after_damage, char_a)
         {char_a, char_b}
-    #    fight(char_a_after_damage, char_b_after_damage)
     end
 
-    def fight(char_a, char_b, _) do  # sino, cada uno de los personajes se ataca, usando la funcion attack
+    def fight(char_a, char_b, :yes) do  # sino, cada uno de los personajes se ataca, usando la funcion attack
         char_b_after_damage = attack(char_a, char_b)
         char_a_after_damage = attack(char_b_after_damage, char_a)
-        fight(char_a_after_damage, char_b_after_damage)
+        fight(char_a_after_damage, char_b_after_damage, :yes)
     end
 
     defp attack(%{hit_points: hit_points_a}, character_b) # si no tengo mas puntos de ataque no hago nada

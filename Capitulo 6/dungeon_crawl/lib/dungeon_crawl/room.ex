@@ -18,7 +18,7 @@ defmodule DungeonCrawl.Room do
             description: "You can see an enemy blocking your path.",
             actions: [forward()],
             trigger: Triggers.Enemy,
-            chance: %{medium: 100, hard: 100},
+            chance: %{medium: 0, hard: 100},
         },
         %Room{
             description: "Nothing here.",
@@ -26,13 +26,19 @@ defmodule DungeonCrawl.Room do
             trigger: Triggers.Empty,
             chance: %{medium: 0,hard: 50},
             
-
         },
         %Room{
             description: "Something shines..",
             actions: [forward()],
             trigger: Triggers.Treasure,
             chance: %{medium: 0,hard: 50},
+       
+        },
+        %Room{
+            description: "Whoops! Trap here.",
+            actions: [forward()],
+            trigger: Triggers.Trap,
+            chance: %{medium: 100,hard: 50},
        
         },
     ]

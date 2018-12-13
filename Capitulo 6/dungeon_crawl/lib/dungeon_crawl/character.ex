@@ -7,7 +7,7 @@ defmodule DungeonCrawl.Character do
         max_hit_points: non_neg_integer,
         attack_description: String.t,
         damage_range: Range.t,
-        score: non_neg_integer
+        #score: non_neg_integer
       
     }
     
@@ -17,8 +17,8 @@ defmodule DungeonCrawl.Character do
               hit_points: 0,
               max_hit_points: 0,
               attack_description: nil,
-              damage_range: nil,
-              score: 0
+              damage_range: nil
+              #score: 0
               
 
         defimpl String.Chars do

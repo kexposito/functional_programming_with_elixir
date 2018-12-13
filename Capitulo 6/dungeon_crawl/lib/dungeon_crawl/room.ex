@@ -18,7 +18,7 @@ defmodule DungeonCrawl.Room do
             description: "You can see an enemy blocking your path.",
             actions: [forward()],
             trigger: Triggers.Enemy,
-            chance: %{medium: 0, hard: 100},
+            chance: %{medium: 100, hard: 100},
            
 
         },
@@ -34,7 +34,7 @@ defmodule DungeonCrawl.Room do
             description: "Something shines..",
             actions: [forward()],
             trigger: Triggers.Treasure,
-            chance: %{medium: 100,hard: 50},
+            chance: %{medium: 0,hard: 50},
        
         },
     ]

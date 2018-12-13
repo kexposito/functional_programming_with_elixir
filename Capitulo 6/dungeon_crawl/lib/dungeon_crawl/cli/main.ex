@@ -5,7 +5,7 @@ defmodule DungeonCrawl.CLI.Main do
         welcome_message()
         
         Shell.prompt("Press Enter to continue")
-        crawl(hero_choice(),difficulty_choice() , DungeonCrawl.Room.all(),0) # random room
+        crawl(hero_choice(),difficulty_choice() , DungeonCrawl.Room.all()) # random room
     end
     
     defp welcome_message do
@@ -24,7 +24,7 @@ defmodule DungeonCrawl.CLI.Main do
         %{chance: dif}
     end
 
-    defp crawl(%{hit_points: 0}, _, _, score) do 
+    defp crawl(%{hit_points: 0}, _, _) do 
         Shell.prompt("")
         Shell.cmd("clear")
         Shell.info("Unfortunately your wounds are too many to keep walking.")
@@ -35,13 +35,13 @@ defmodule DungeonCrawl.CLI.Main do
     end
 
     
-    defp crawl(character, dif, rooms, score) do
+    defp crawl(character, dif, rooms) do
         Shell.info("You keep moving forward to the next room.")
         Shell.prompt("Press Enter to continue")
         Shell.cmd("clear")
         IO.inspect(character.hit_points)
         Shell.info(DungeonCrawl.Character.current_stats(character))
-        Shell.info("Player Score\nScore: #{score}")
+        Shell.info("Player Score\nScore: #{character.score}")
         mark = Enum.random(1..100)
 
         #IO.inspect(dif.chance)
@@ -54,7 +54,7 @@ defmodule DungeonCrawl.CLI.Main do
         |> Enum.random()  
         |> DungeonCrawl.CLI.RoomActionsChoice.start
         |> trigger_action(character)
-        |> handle_action_result(dif, score)
+        |> handle_action_result(dif)
     end
     
     # def random_by_difficulty(rooms, dif) do
@@ -73,11 +73,11 @@ defmodule DungeonCrawl.CLI.Main do
         room.trigger.run(character, action)
     end
 
-    defp handle_action_result({_,:exit},_, _),
+    defp handle_action_result({_,:exit},_),
         do: Shell.info("You found the exit. You won the game. Congratulations!")
 
-    defp handle_action_result({character,_},dif,score),
-        do: crawl(character, dif,DungeonCrawl.Room.all(),score)
+    defp handle_action_result({character,_},dif),
+        do: crawl(character, dif,DungeonCrawl.Room.all())
 
 
 

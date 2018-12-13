@@ -17,8 +17,8 @@ defmodule DungeonCrawl.Character do
               hit_points: 0,
               max_hit_points: 0,
               attack_description: nil,
-              damage_range: nil
-              #score: 0
+              damage_range: nil,
+              score: 0
               
 
         defimpl String.Chars do
@@ -39,10 +39,10 @@ defmodule DungeonCrawl.Character do
             %{character | hit_points: new_hit_points} # actualizamos el valor
         end
 
-        # def add_score(character, points) do
-        #       new_points = character.score + points
-        #       character = Map.put(character, :score, new_points)
-        # end
+        def add_score(character, points) do
+              new_points = character.score + points
+              %{character | score: new_points} 
+        end
 
         def current_stats(character),
             do: "Player Stats\nHP: #{character.hit_points}/#{character.max_hit_points}"

@@ -1,6 +1,6 @@
 defmodule DungeonCrawl.Heroes do
     alias DungeonCrawl.Character # esto nos permite crear un acceso a Character de manera directa
-
+    # devuelve conjunto de HEROES que son caracteres
     def all, do: [
         %Character{
             name: "Knight",
@@ -9,7 +9,7 @@ defmodule DungeonCrawl.Heroes do
             max_hit_points: 18,
             damage_range: 4..5,
             attack_description: "a sword",
-            #score: 0
+            score: 0
         },
         %Character{
             name: "Wizard",
@@ -18,7 +18,7 @@ defmodule DungeonCrawl.Heroes do
             max_hit_points: 8,
             damage_range: 6..10,
             attack_description: "a fireball",
-            #score: 0
+            score: 0
      
         },
         %Character{
@@ -28,7 +28,7 @@ defmodule DungeonCrawl.Heroes do
             max_hit_points: 12,
             damage_range: 1..12,
             attack_description: "a dagger",
-            #score: 0
+            score: 0
         },
     ]
 end

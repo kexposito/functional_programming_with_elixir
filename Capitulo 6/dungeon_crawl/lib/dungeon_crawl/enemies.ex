@@ -1,5 +1,6 @@
 defmodule DungeonCrawl.Enemies do
     alias DungeonCrawl.Character
+        # devuelve conjunto de ENEMIGOS que son caracteres
 
     def all, do: [
         %Character{

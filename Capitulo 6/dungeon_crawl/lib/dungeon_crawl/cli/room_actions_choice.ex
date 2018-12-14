@@ -16,7 +16,6 @@ defmodule DungeonCrawl.CLI.RoomActionsChoice do
             |> Shell.prompt
             |> parse_answer
             |> find_action_by_index.()
-
         {room, chosen_action}
     end
 end

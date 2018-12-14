@@ -15,27 +15,27 @@ defmodule DungeonCrawl.Room do
         },
         %Room{
             description: "You can see an enemy blocking your path.",
-            actions: [forward()],
+            actions: [forward(), inventary()],
             trigger: Triggers.Enemy,
-            chance: %{medium: 0, hard: 100},
+            chance: %{medium: 30, hard: 100},
         },
         %Room{
             description: "Nothing here.",
-            actions: [forward()],
+            actions: [forward(), inventary(), rest()],
             trigger: Triggers.Empty,
-            chance: %{medium: 0,hard: 50},
+            chance: %{medium: 100,hard: 50}, # valores por default chance: %{medium: 100,hard: 50},
             
         },
         %Room{
             description: "Something shines..",
-            actions: [forward()],
+            actions: [forward(), inventary(), search()],
             trigger: Triggers.Treasure,
-            chance: %{medium: 0,hard: 50},
+            chance: %{medium: 50,hard: 50},
        
         },
         %Room{
             description: "Whoops! Trap here.",
-            actions: [forward()],
+            actions: [forward(), inventary()],
             trigger: Triggers.Trap,
             chance: %{medium: 100,hard: 50},
        
@@ -49,7 +49,7 @@ defmodule DungeonCrawl.Room do
         # room = put_in(room[:chance][:hard], 150)
 
         room = put_in(room.chance[:medium], 10 * score) 
-        room = put_in(room.chance[:hard], 10 * score)
+        room = put_in(room.chance[:hard], 5 * score)
         IO.inspect(room)
 
        # room = put_in(room.chance[:medium], room.chance.medium + 20)

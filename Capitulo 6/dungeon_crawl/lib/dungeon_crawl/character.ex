@@ -18,11 +18,13 @@ defmodule DungeonCrawl.Character do
               max_hit_points: 0,
               attack_description: nil,
               damage_range: nil,
-              score: 0
+              score: 0,
+              potions: 0
               
 
         defimpl String.Chars do
             def to_string(character), do: character.name
+         #   def to_string(character[:inventary]), do: character[:inventary]
         end
 
         def take_damage(character, damage) do
@@ -30,6 +32,11 @@ defmodule DungeonCrawl.Character do
             %{character | hit_points: new_hit_points} # actualizamos el valor
         end
 
+
+        # def heal(character = %{potions: 0}, heal_value) do
+        #     Sell.info("You dont have potions to use")
+        #     %{character} # actualizamos el valor
+        # end
 
         def heal(character, heal_value) do
             new_hit_points = min(

@@ -23,4 +23,5 @@ defmodule DungeonCrawl.CLI.DifficultyChoice do
         Shell.info("Sure you want to play #{chosen_dif} mode?")
         if Shell.yes?("Confirm?"), do: chosen_dif, else: start()
     end
+    
 end

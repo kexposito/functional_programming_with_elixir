@@ -4,6 +4,8 @@ defmodule DungeonCrawl.Room do
 
     import DungeonCrawl.Room.Action
 
+    #score: non_neg_integer
+
     defstruct description: nil, actions: [], trigger: nil, chance: nil
 
     def all, do: [
@@ -41,6 +43,20 @@ defmodule DungeonCrawl.Room do
        
         },
     ]
+
+    # def filter_rooms(type) do
+    #     room = DungeonCrawl.Room.all() ## aca devolver 
+    #     Enum.filter(room, fn room = %{trigger: type} -> %{trigger: type} end)
+    #     #IO.inspect
+    # end
+
+    def filter_rooms([], _), do: []
+    def filter_rooms([room = %{trigger: type} | incoming_room], type) do 
+        [room | filter_rooms(incoming_room, type)]
+    end
+    def filter_rooms([room | incoming_room], :type) do 
+         filter_rooms(incoming_room, type)
+    end
 
     def update_rooms([], _), do: []
     def update_rooms([room = %{trigger: Triggers.Exit} | incoming_room], score) do

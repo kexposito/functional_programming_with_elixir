@@ -75,14 +75,25 @@ defmodule DungeonCrawl.CLI.Main do
     #     |> Enum.random()
     #   end
 
+    
 
     defp trigger_action({room, action}, character) do
         Shell.cmd("clear")
         room.trigger.run(character, action)
     end
 
+    # defp trigger_action({room, :r, character) do # si vuelvo del inventario
+    #     Shell.cmd("clear")
+    #     room.trigger.run(character, _)
+    # end
+
+
+
     defp handle_action_result({_,:exit},_),
         do: Shell.info("You found the exit. You won the game. Congratulations!")
+        
+    # defp handle_action_result({character,_},dif), # que me maneje si apreto exit
+    #     do: crawl(character, dif,DungeonCrawl.Room.all())
 
     defp handle_action_result({character,_},dif),
         do: crawl(character, dif,DungeonCrawl.Room.all()) # error que me los  vuelve a cargar

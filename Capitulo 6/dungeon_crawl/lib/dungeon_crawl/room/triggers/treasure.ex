@@ -1,16 +1,18 @@
 defmodule DungeonCrawl.Room.Triggers.Treasure do
     @behaviour DungeonCrawl.Room.Trigger
 
-    import DungeonCrawl.CLI.BaseCommands 
+    import DungeonCrawl.CLI.BaseCommands
+    import DungeonCrawl.Room
+    import DungeonCrawl.CLI.RoomActionsChoice
 
     alias Mix.Shell.IO, as: Shell 
     def run(character, %DungeonCrawl.Room.Action{id: :forward}) do
         Shell.info("You find a trasure with a potion!")     
-        character = DungeonCrawl.Character.add_score(character, 2)
-
         {character, :forward}
     end
+
     def run(character, %DungeonCrawl.Room.Action{id: :search}) do
+        character = DungeonCrawl.Character.add_score(character, 2)
         Shell.info("You find a trasure with a potion!, Keep moving")   
         #Shell.info("5 points more for you")
         new_char = DungeonCrawl.Character.add_potion(character)     
@@ -43,10 +45,13 @@ defmodule DungeonCrawl.Room.Triggers.Treasure do
         new_character
     end
 
-    defp confirm_dif(:exit, character) do
+    defp confirm_dif(:exit, character) do # le tengo q pasar un cuarto como de manera
         Shell.cmd("clear")
         Shell.info("Sure you want to return?")
-        if Shell.yes?("Confirm?"), do: run(character, %DungeonCrawl.Room.Action{id: :forward})
+        rooms = DungeonCrawl.Room.all()
+        filter_type = DungeonCrawl.Room.filter_rooms(rooms,Triggers.Treasure)
+        #IO.inspect(List.first(filter_type))
+        if Shell.yes?("Confirm?"), do: DungeonCrawl.CLI.RoomActionsChoice.start(List.first(filter_type)) # aca le tengo q pasar el Room
     end
 
 end

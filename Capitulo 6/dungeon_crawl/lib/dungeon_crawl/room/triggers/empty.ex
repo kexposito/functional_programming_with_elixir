@@ -44,7 +44,7 @@ defmodule DungeonCrawl.Room.Triggers.Empty do
     defp confirm_dif(:exit, character) do
         Shell.cmd("clear")
         Shell.info("Sure you want to return?")
-        if Shell.yes?("Confirm?"), do: run(character, %DungeonCrawl.Room.Action{id: :forward})
+        if Shell.yes?("Confirm?"), do: DungeonCrawl.CLI.RoomActionsChoice.start()
     end
        
 

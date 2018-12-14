@@ -17,13 +17,13 @@ defmodule DungeonCrawl.Room do
             description: "You can see an enemy blocking your path.",
             actions: [forward(), inventary()],
             trigger: Triggers.Enemy,
-            chance: %{medium: 30, hard: 100},
+            chance: %{medium: 100, hard: 100},# default chance: %{medium: 30, hard: 100},
         },
         %Room{
             description: "Nothing here.",
             actions: [forward(), inventary(), rest()],
             trigger: Triggers.Empty,
-            chance: %{medium: 10,hard: 50}, # valores por default chance: %{medium: 100,hard: 50},
+            chance: %{medium: 0,hard: 50}, # valores por default chance: %{medium: 100,hard: 50},
             
         },
         %Room{
@@ -50,7 +50,6 @@ defmodule DungeonCrawl.Room do
 
         room = put_in(room.chance[:medium], 10 * score) 
         room = put_in(room.chance[:hard], 5 * score)
-        IO.inspect(room)
 
        # room = put_in(room.chance[:medium], room.chance.medium + 20)
         #IO.inspect(room)

@@ -7,6 +7,8 @@ defmodule DungeonCrawl.Room.Triggers.Enemy do
     alias Mix.Shell.IO, as: Shell 
     def run(character, %DungeonCrawl.Room.Action{id: :forward}) do
         enemy = Enum.random(DungeonCrawl.Enemies.all)
+        character = DungeonCrawl.Character.add_score(character, 1)
+
         Shell.info(enemy.description)
         Shell.info("The enemy #{enemy.name} wants to fight.")
         Shell.info("You were prepared and attack first.")
@@ -28,6 +30,11 @@ defmodule DungeonCrawl.Room.Triggers.Enemy do
 
         {character, :inventary}
     end
+
+    # defp trigger_action({room, action}, character) do
+    #     Shell.cmd("clear")
+    #     room.trigger.run(character, action)
+    # end
 
     defp confirm_dif(:potions, character = %{potions: 0}) do
         Shell.cmd("clear")

@@ -6,13 +6,15 @@ defmodule DungeonCrawl.Room.Triggers.Treasure do
     alias Mix.Shell.IO, as: Shell 
     def run(character, %DungeonCrawl.Room.Action{id: :forward}) do
         Shell.info("You find a trasure with a potion!")     
+        character = DungeonCrawl.Character.add_score(character, 2)
+
         {character, :forward}
     end
     def run(character, %DungeonCrawl.Room.Action{id: :search}) do
         Shell.info("You find a trasure with a potion!, Keep moving")   
         #Shell.info("5 points more for you")
         new_char = DungeonCrawl.Character.add_potion(character)     
-        {new_char, :forward}
+        {new_char, :search}
     end
 
     def run(character, %DungeonCrawl.Room.Action{id: :inventary}) do
@@ -44,7 +46,7 @@ defmodule DungeonCrawl.Room.Triggers.Treasure do
     defp confirm_dif(:exit, character) do
         Shell.cmd("clear")
         Shell.info("Sure you want to return?")
-        if Shell.yes?("Confirm?"), do: character#run(character, %DungeonCrawl.Room.Action{id: :forward})
+        if Shell.yes?("Confirm?"), do: run(character, %DungeonCrawl.Room.Action{id: :forward})
     end
 
 end

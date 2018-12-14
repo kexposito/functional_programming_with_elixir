@@ -41,6 +41,6 @@ defmodule DungeonCrawl.Room.Triggers.Trap do
     defp confirm_dif(:exit, character) do
         Shell.cmd("clear")
         Shell.info("Sure you want to return?")
-        if Shell.yes?("Confirm?"), do: run(character, %DungeonCrawl.Room.Action{id: :inventary})
+        if Shell.yes?("Confirm?"), do: run(character, %DungeonCrawl.Room.Action{id: :forward})
     end
 end 

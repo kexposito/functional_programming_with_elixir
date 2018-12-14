@@ -42,7 +42,6 @@ defmodule DungeonCrawl.CLI.Main do
         Shell.info("You keep moving forward to the next room.")
         Shell.prompt("Press Enter to continue")
         Shell.cmd("clear")
-        IO.inspect(character.hit_points)
         Shell.info(DungeonCrawl.Character.current_stats(character))
         Shell.info("Player Score\nScore: #{character.score}")
         mark = Enum.random(1..100)
@@ -55,7 +54,6 @@ defmodule DungeonCrawl.CLI.Main do
         #|> Enum.filter(fn room -> Map.get(room.chance,  dif.chance) >= mark end)  
         #|> Enum.filter(fn room -> (room.chance.dif) >= mark end)
         #|> random_by_difficulty("medium")  #   |> Enum.filter(fn %{chance: x} -> Enum.member?(mark,x)) end)
-        IO.inspect(rooms)
         rooms = DungeonCrawl.Room.update_rooms(rooms, character.score)
         
 

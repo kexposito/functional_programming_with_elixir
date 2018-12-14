@@ -8,7 +8,6 @@ defmodule DungeonCrawl.Character do
         attack_description: String.t,
         damage_range: Range.t,
         #score: non_neg_integer
-      
     }
     
 
@@ -43,9 +42,7 @@ defmodule DungeonCrawl.Character do
                 character.hit_points + heal_value,
                 character.max_hit_points
             )
-             new = %{character | hit_points: new_hit_points}
-             %{new | potions: new.potions -1}
-           
+            %{character | hit_points: new_hit_points, potions: character.potions - 1}
              # actualizamos el valor
         end
 

@@ -1,6 +1,18 @@
 defmodule DungeonCrawl.CLI.BaseCommands do
     alias Mix.Shell.IO, as: Shell
 
+    def display_options(options, character) do
+        options
+        |> Enum.with_index(1)
+        |> Enum.each(fn {option, index} -> 
+            case option do
+            :exit -> Shell.info("#{index} - #{option}") 
+             _    -> Shell.info("#{index} - #{option} - #{character.potions}")
+            end
+        end)
+        options
+    end
+
     def display_options(options) do
         options
         |> Enum.with_index(1)

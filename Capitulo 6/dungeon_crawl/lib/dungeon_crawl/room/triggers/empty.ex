@@ -19,7 +19,7 @@ defmodule DungeonCrawl.Room.Triggers.Empty do
         find_dif_by_index= &Enum.at(my_inventary, &1) 
 
         my_inventary
-        |> display_options
+        |> display_options(character)
         |> generate_question 
         |> Shell.prompt
         |> parse_answer
@@ -39,10 +39,10 @@ defmodule DungeonCrawl.Room.Triggers.Empty do
         character = DungeonCrawl.Character.heal(character, 3)
     end
 
-    defp confirm_dif(:exit, _) do
+    defp confirm_dif(:exit, character) do
         Shell.cmd("clear")
         Shell.info("Sure you want to return?")
-        if Shell.yes?("Confirm?"), do: :exit 
+        if Shell.yes?("Confirm?"), do: run(character, %DungeonCrawl.Room.Action{id: :forward})
     end
        
 

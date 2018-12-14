@@ -5,9 +5,13 @@ defmodule DungeonCrawl.Room.Triggers.Treasure do
 
     alias Mix.Shell.IO, as: Shell 
     def run(character, %DungeonCrawl.Room.Action{id: :forward}) do
-        Shell.info("You find a trasure with a potion!")   
-        Shell.info("5 points more for you")
-        new_char = DungeonCrawl.Character.add_score(character, 5)     
+        Shell.info("You find a trasure with a potion!")     
+        {character, :forward}
+    end
+    def run(character, %DungeonCrawl.Room.Action{id: :search}) do
+        Shell.info("You find a trasure with a potion!, Keep moving")   
+        #Shell.info("5 points more for you")
+        new_char = DungeonCrawl.Character.add_potion(character)     
         {new_char, :forward}
     end
 
@@ -16,7 +20,7 @@ defmodule DungeonCrawl.Room.Triggers.Treasure do
         find_dif_by_index= &Enum.at(my_inventary, &1) 
 
         my_inventary
-        |> display_options
+        |> display_options(character)
         |> generate_question 
         |> Shell.prompt
         |> parse_answer
@@ -26,20 +30,21 @@ defmodule DungeonCrawl.Room.Triggers.Treasure do
         {character, :inventary}
     end
 
-    defp confirm_dif(:potions, character = %{potions: 0}) do
+    defp confirm_dif(:potions, %{potions: 0}) do
         Shell.cmd("clear")
         Shell.info("You dont have potions")
     end
 
     defp confirm_dif(:potions, character) do
         Shell.cmd("clear")
-        character = DungeonCrawl.Character.heal(character, 3)
+        new_character = DungeonCrawl.Character.heal(character, 3)
+        new_character
     end
 
-    defp confirm_dif(:exit, _) do
+    defp confirm_dif(:exit, character) do
         Shell.cmd("clear")
         Shell.info("Sure you want to return?")
-        if Shell.yes?("Confirm?"), do: :exit 
+        if Shell.yes?("Confirm?"), do: character#run(character, %DungeonCrawl.Room.Action{id: :forward})
     end
 
 end

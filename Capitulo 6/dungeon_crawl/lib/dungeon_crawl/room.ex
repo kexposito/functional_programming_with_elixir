@@ -23,21 +23,21 @@ defmodule DungeonCrawl.Room do
             description: "Nothing here.",
             actions: [forward(), inventary(), rest()],
             trigger: Triggers.Empty,
-            chance: %{medium: 100,hard: 50}, # valores por default chance: %{medium: 100,hard: 50},
+            chance: %{medium: 10,hard: 50}, # valores por default chance: %{medium: 100,hard: 50},
             
         },
         %Room{
             description: "Something shines..",
             actions: [forward(), inventary(), search()],
             trigger: Triggers.Treasure,
-            chance: %{medium: 50,hard: 50},
+            chance: %{medium: 100,hard: 50},#  default chance: %{medium: 50,hard: 50}, 
        
         },
         %Room{
             description: "Whoops! Trap here.",
             actions: [forward(), inventary()],
             trigger: Triggers.Trap,
-            chance: %{medium: 100,hard: 50},
+            chance: %{medium: 10,hard: 50},# chance: %{medium: 100,hard: 50},
        
         },
     ]

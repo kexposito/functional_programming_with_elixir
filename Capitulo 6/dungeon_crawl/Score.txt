@@ -2,3 +2,5 @@ Player Name: Kevin
 Hero: You -- Score: 6 
 Player Name: Kevin2
 Hero: You -- Score: 6 
+Player Name: 
+Hero: You -- Score: 6 

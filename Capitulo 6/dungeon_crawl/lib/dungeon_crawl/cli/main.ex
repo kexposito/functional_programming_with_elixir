@@ -48,13 +48,16 @@ defmodule DungeonCrawl.CLI.Main do
         mark = Enum.random(1..100)
 
 
-        rooms = DungeonCrawl.Room.update_exit(rooms, dif);
-        IO.inspect(rooms)
+     #   rooms = DungeonCrawl.Room.update_exit(rooms, dif);
+       # IO.inspect(rooms)
 
         #IO.inspect(dif.chance)
         #|> Enum.filter(fn room -> Map.get(room.chance,  dif.chance) >= mark end)  
         #|> Enum.filter(fn room -> (room.chance.dif) >= mark end)
         #|> random_by_difficulty("medium")  #   |> Enum.filter(fn %{chance: x} -> Enum.member?(mark,x)) end)
+        IO.inspect(rooms)
+        rooms = DungeonCrawl.Room.update_rooms(rooms, character.score)
+        
 
         rooms
         |> Enum.filter(fn room -> room.chance[dif.chance] >= mark end)
@@ -84,7 +87,7 @@ defmodule DungeonCrawl.CLI.Main do
         do: Shell.info("You found the exit. You won the game. Congratulations!")
 
     defp handle_action_result({character,_},dif),
-        do: crawl(character, dif,DungeonCrawl.Room.all())
+        do: crawl(character, dif,DungeonCrawl.Room.all()) # error que me los  vuelve a cargar
 
 
 

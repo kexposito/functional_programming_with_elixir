@@ -15,15 +15,6 @@ defmodule DungeonCrawl.Room.Triggers.Empty do
     end
 
     def run(character, %DungeonCrawl.Room.Action{id: :inventary}) do
-        # ver todo lo que guardeen el inventario enemy = Enum.random(DungeonCrawl.Enemies.all)
-        # Shell.info(enemy.description)
-        # invetary
-       #    display_options
-       # Shell.info("You were prepared and attack first.")
-       # {updated_char, enemy} = DungeonCrawl.Battle.fight(character, enemy, :yes)
-       # {updated_char, :inventary}
-        
-        # prueba = Map.to_list(character.inventary)
         my_inventary = [:potions, :exit]
         find_dif_by_index= &Enum.at(my_inventary, &1) 
 

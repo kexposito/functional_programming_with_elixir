@@ -1,0 +1,58 @@
+Impure Functions: no podemos predecir lo que retornara la funcion, y tiene efectos
+secundarios
+
+############### Controlling the Flow of Impure Functions ######################
+ver
+case/0/shop.ex esta bien definida
+case/1/shop.ex NO esta bien definida, es dificil de leer y entender
+case/2/shop.ex esta bien definida
+
+aplicamos ahora lo mismo a dungeon_crawl
+
+
+############### Try, Raise, and Rescue ######################
+usado generalmente cuando hay errores
+ver tryrescue/shop.ex
+
+############### Try, Throw, and Catch ######################
+dungeon ejemplo de ambos
+
+##### Handling Impure Functions with the Error Monad ############
+cubrir multiples errores, como por ejemplo muchas funciones seguidas
+que puedan provocar cada una un error distinto MONADS
+
+defp deps do
+[
+{:dialyxir, "~> 0.5", only: [:dev], runtime: false},
+{:monadex, "~> 1.1"}
+]
+end
+
+$ mix do deps.get, deps.compile
+Running dependency resolution...
+* Getting monadex (Hex package)
+Checking package (https://repo.hex.pm/tarballs/monadex-1.1.2.tar)
+Fetched package
+==> monadex
+Compiling 16 files (.ex)
+Generated monadex app
+
+iex> use Monad.Operators
+iex> import Monad.Result
+iex> success(42) ~>> (& &1 + 1) ~>> (& &1 + 2)
+45
+iex> error("wrong") ~>> (& &1 + 1) ~>> (& &1 + 2)
+%Monad.Result{error: "wrong", type: :error, value: nil}
+
+use Monad.Operators
+alias Mix.Shell.IO, as: Shell
+import Monad.Result, only: [success: 1, success?: 1, error: 1, return: 1]
+Here are the functions we’ve imported from Monad.Result:
+• success/1, which wraps the given value in a result monad marked with
+success.
+• return/1, which wraps the given value in a result monad marked with
+success.
+• error/1, which wraps the given message in a result monad marked with
+failure.
+• success?/1, which returns true when the given result monad is marked with
+success; otherwise it returns false.
